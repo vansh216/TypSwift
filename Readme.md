@@ -7,66 +7,79 @@ A modern, fast, and clean typing speed test web application .
 ## 📁 Project Structure
 
 ```
-src/
-├── features/
-│   ├── auth/
-│   │   ├── components/
-│   │   │   ├── LoginForm.jsx         # Login form component
-│   │   │   └── RegisterForm.jsx      # Register form component
-│   │   ├── pages/
-│   │   │   ├── Login.jsx             # Login page
-│   │   │   └── Register.jsx          # Register page
-│   │   └── api/
-│   │       └── auth.api.js           # Auth API calls (login, register)
-│   │
-│   ├── test/
-│   │   ├── components/
-│   │   │   ├── TypingArea.jsx        # Main typing input area
-│   │   │   ├── Timer.jsx             # Countdown timer
-│   │   │   ├── WpmCounter.jsx        # Live WPM display
-│   │   │   └── ModeSelector.jsx      # Time mode selector (1,2,3,5,10 min)
-│   │   ├── pages/
-│   │   │   └── Test.jsx              # Main test page
-│   │   └── api/
-│   │       └── test.api.js           # Fetch paragraph, submit result
-│   │
-│   ├── leaderboard/
-│   │   ├── components/
-│   │   │   └── LeaderboardTable.jsx  # Leaderboard rankings table
-│   │   ├── pages/
-│   │   │   └── Leaderboard.jsx       # Leaderboard page
-│   │   └── api/
-│   │       └── leaderboard.api.js    # Fetch leaderboard data
-│   │
-│   ├── profile/
-│   │   ├── components/
-│   │   │   ├── StatsCard.jsx         # WPM, accuracy, total tests cards
-│   │   │   ├── HistoryTable.jsx      # Past test results table
-│   │   │   └── WpmChart.jsx          # WPM progress chart (recharts)
-│   │   ├── pages/
-│   │   │   └── Profile.jsx           # User profile/dashboard page
-│   │   └── api/
-│   │       └── profile.api.js        # Fetch history and stats
-│   │
-│   └── results/
-│       ├── components/
-│       │   └── ResultCard.jsx        # Single test result display
-│       └── pages/
-│           └── Results.jsx           # Results page after test ends
+TypSwift/
 │
-├── shared/
-│   ├── components/
-│   │   ├── Navbar.jsx                # Top navigation bar
-│   │   ├── ProtectedRoute.jsx        # Blocks unauthenticated users
-│   │   └── Loader.jsx                # Loading spinner
-│   ├── context/
-│   │   └── AuthContext.jsx           # Global auth state (user, token, login, logout)
-│   └── api/
-│       └── axios.js                  # Axios base config with interceptors
+├── public/
+│   └── favicon.ico
 │
-├── App.jsx                           # Routes setup
-├── main.jsx                          # App entry point
-└── index.css                         # Tailwind v4 import
+├── src/
+│   ├── features/
+│   │   ├── auth/
+│   │   │   ├── components/
+│   │   │   │   ├── LoginForm.jsx
+│   │   │   │   └── RegisterForm.jsx
+│   │   │   ├── pages/
+│   │   │   │   ├── Login.jsx
+│   │   │   │   └── Register.jsx
+│   │   │   └── api/
+│   │   │       └── auth.api.js
+│   │   │
+│   │   ├── test/
+│   │   │   ├── components/
+│   │   │   │   ├── TypingArea.jsx
+│   │   │   │   ├── Timer.jsx
+│   │   │   │   ├── WpmCounter.jsx
+│   │   │   │   └── ModeSelector.jsx
+│   │   │   ├── pages/
+│   │   │   │   └── Test.jsx
+│   │   │   └── api/
+│   │   │       └── test.api.js
+│   │   │
+│   │   ├── leaderboard/
+│   │   │   ├── components/
+│   │   │   │   └── LeaderboardTable.jsx
+│   │   │   ├── pages/
+│   │   │   │   └── Leaderboard.jsx
+│   │   │   └── api/
+│   │   │       └── leaderboard.api.js
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── components/
+│   │   │   │   ├── StatsCard.jsx
+│   │   │   │   ├── HistoryTable.jsx
+│   │   │   │   └── WpmChart.jsx
+│   │   │   ├── pages/
+│   │   │   │   └── Profile.jsx
+│   │   │   └── api/
+│   │   │       └── profile.api.js
+│   │   │
+│   │   └── results/
+│   │       ├── components/
+│   │       │   └── ResultCard.jsx
+│   │       └── pages/
+│   │           └── Results.jsx
+│   │
+│   ├── shared/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   └── Loader.jsx
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   └── api/
+│   │       └── axios.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── .env
+├── .env.example
+├── .gitignore
+├── index.html
+├── vite.config.js
+├── package.json
+└── README.md
 ```
 
 ---
