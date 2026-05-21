@@ -253,7 +253,7 @@ const Navbar = () => {
 
         {/* ── Logo ── */}
         <Link to="/" style={styles.logo}>
-          <div style={styles.logoIcon}>⌨</div>
+          <div style={styles.logoIcon}><img src="favicon.png" alt="" /></div>
           <span style={styles.logoText}>
             Type<span style={styles.logoAccent}>Bench</span>
           </span>
