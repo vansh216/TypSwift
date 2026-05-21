@@ -1,13 +1,62 @@
 @import "tailwindcss";
+:root {
+  --nav-bg         : #ffffff;
+  --nav-border     : #e5e7eb;
+  --nav-text       : #111827;
+  --nav-text-muted : #6b7280;
+  --nav-hover      : #f97316;
+  --nav-btn-bg     : #f9fafb;
+  --nav-btn-border : #e5e7eb;
+  --badge-bg       : #fff7ed;
+  --badge-border   : #fed7aa;
+  --badge-text     : #c2410c;
 
+  /* Page level */
+  --bg-primary     : #ffffff;
+  --bg-secondary   : #f9fafb;
+  --text-primary   : #111827;
+  --text-secondary : #6b7280;
+  --border-color   : #e5e7eb;
+  --card-bg        : #ffffff;
+  --accent         : #f97316;
+  --accent-hover   : #ea580c;
+}
+
+.dark {
+  --nav-bg         : #030712;
+  --nav-border     : #1f2937;
+  --nav-text       : #f9fafb;
+  --nav-text-muted : #9ca3af;
+  --nav-hover      : #f97316;
+  --nav-btn-bg     : #111827;
+  --nav-btn-border : #374151;
+  --badge-bg       : #431407;
+  --badge-border   : #7c2d12;
+  --badge-text     : #fdba74;
+
+  /* Page level */
+  --bg-primary     : #030712;
+  --bg-secondary   : #111827;
+  --text-primary   : #f9fafb;
+  --text-secondary : #9ca3af;
+  --border-color   : #1f2937;
+  --card-bg        : #111827;
+  --accent         : #f97316;
+  --accent-hover   : #ea580c;
+}
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  margin    : 0;
+  padding   : 0;
 }
 
 body {
+  background : var(--bg-primary);
+  color      : var(--text-primary);
   font-family: 'Inter', sans-serif;
+  transition : background 0.3s, color 0.3s;
   -webkit-font-smoothing: antialiased;
 }
+
+
