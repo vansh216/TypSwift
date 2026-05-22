@@ -8,6 +8,9 @@ import Navbar from './shared/components/Navbar.jsx'
 import Login    from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
 
+//Leaderboard
+import Leaderboard from './features/Leaderboard/pages/Leaderboard.jsx'
+
 import './App.css'
 
 
@@ -24,6 +27,7 @@ function App() {
           <Routes>
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/register' element={<Register/>}/>
+                <Route path='/leaderboard' element={<Leaderboard/>}/>
 
 
           </Routes>
