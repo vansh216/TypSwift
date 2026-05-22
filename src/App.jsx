@@ -12,6 +12,8 @@ import Register from './features/auth/pages/Register';
 import Leaderboard from './features/Leaderboard/pages/Leaderboard.jsx'
 // Result
 import Results from './features/result/pages/Results.jsx'
+// profile
+import Profile from './features/profile/pages/Profile.jsx'
 
 import './App.css'
 
@@ -35,6 +37,13 @@ function App() {
                 <ProtectedRoute>
                   <Results />
                 </ProtectedRoute>
+                 }/>
+
+                  <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+                
                  }/>
 
 
