@@ -10,6 +10,8 @@ import Register from './features/auth/pages/Register';
 
 //Leaderboard
 import Leaderboard from './features/Leaderboard/pages/Leaderboard.jsx'
+// Result
+import Results from './features/result/pages/Results.jsx'
 
 import './App.css'
 
@@ -28,6 +30,12 @@ function App() {
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/leaderboard' element={<Leaderboard/>}/>
+
+                 <Route path="/results" element={
+                <ProtectedRoute>
+                  <Results />
+                </ProtectedRoute>
+                 }/>
 
 
           </Routes>
