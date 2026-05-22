@@ -4,6 +4,10 @@ import { AuthProvider } from './shared/context/AuthContext.jsx'
 import ProtectedRoute from './shared/components/ProtectedRoute.jsx'
 import Navbar from './shared/components/Navbar.jsx'
 
+//Auth
+import Login    from './features/auth/pages/Login';
+import Register from './features/auth/pages/Register';
+
 import './App.css'
 
 
@@ -15,6 +19,15 @@ function App() {
     <AuthProvider>
       <div className="min-h-screen">
         <Navbar/>
+
+        <main>
+          <Routes>
+                <Route path='/login' element={<Login/>}/>
+                <Route path='/register' element={<Register/>}/>
+
+
+          </Routes>
+        </main>
 
 
      
