@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom"
 import { AuthProvider } from './shared/context/AuthContext.jsx'
 import ProtectedRoute from './shared/components/ProtectedRoute.jsx'
 import Navbar from './shared/components/Navbar.jsx'
+import Footer from './shared/components/Footer.jsx'
 
 //Auth
 import Login    from './features/auth/pages/Login';
@@ -16,6 +17,7 @@ import Results from './features/result/pages/Results.jsx'
 import Profile from './features/profile/pages/Profile.jsx'
 
 import './App.css'
+import Home from './features/Home/page/Home.jsx'
 
 
 function App() {
@@ -29,6 +31,7 @@ function App() {
 
         <main>
           <Routes>
+                <Route path='/' element={<Home/>}/>
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/leaderboard' element={<Leaderboard/>}/>
@@ -49,6 +52,7 @@ function App() {
 
           </Routes>
         </main>
+        {/* <Footer/> */}
 
 
      
