@@ -14,6 +14,10 @@ TypSwift/
 │
 ├── src/
 │   ├── features/
+|   |   ├── Home/
+|   |   |    ├── page/
+|   |   |          ├── Home.jsx
+|   |   |       
 │   │   ├── auth/
 │   │   │   ├── components/
 │   │   │   │   ├── LoginForm.jsx
