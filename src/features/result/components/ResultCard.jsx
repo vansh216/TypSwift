@@ -17,6 +17,9 @@ const ResultCard = ({ result }) => {
     wpmHistory = [],
   } = result;
 
+  const num = duration/60;
+const minute= num.toFixed(2);
+
   // Build chart data from wpmHistory array
   const chartData = wpmHistory.map((w, i) => ({
     second: i + 1,
@@ -54,7 +57,7 @@ const ResultCard = ({ result }) => {
         {/* Duration */}
         <div style={s.statBox}>
           <span style={s.statValue(false)}>
-            {duration / 60}
+           { minute}
           </span>
           <span style={s.statLabel}>Minutes</span>
         </div>
