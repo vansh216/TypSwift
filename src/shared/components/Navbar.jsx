@@ -7,12 +7,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isDark,   setIsDark]   = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // ─────────────────────────────────────────
+  
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
   // On startup — read saved theme from localStorage
-  // ─────────────────────────────────────────
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark') {
@@ -21,11 +31,9 @@ const Navbar = () => {
     }
   }, []);
 
-  // ─────────────────────────────────────────
   // Toggle dark / light
   // adds or removes 'dark' class on <html>
   // all CSS variables in index.css switch automatically
-  // ─────────────────────────────────────────
   const toggleTheme = () => {
     const html = document.documentElement;
     if (isDark) {
@@ -48,202 +56,200 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
-    { path: '/',            label: 'Home'        },
+    { path: '/', label: 'Home' },
     { path: '/leaderboard', label: 'Leaderboard' },
     ...(isLoggedIn ? [{ path: '/profile', label: 'Profile' }] : []),
   ];
 
-  // ─────────────────────────────────────────
   // Styles using CSS variables from index.css
-  // ─────────────────────────────────────────
   const styles = {
     nav: {
-      position        : 'sticky',
-      top             : 0,
-      zIndex          : 50,
-      background      : 'var(--bg-primary)',
-      borderBottom    : '1px solid var(--border-color)',
-      transition      : 'background 0.3s, border-color 0.3s',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      background: 'var(--bg-primary)',
+      borderBottom: '1px solid var(--border-color)',
+      transition: 'background 0.3s, border-color 0.3s',
     },
     inner: {
-      maxWidth        : '1200px',
-      margin          : '0 auto',
-      padding         : '0 2rem',
-      height          : '56px',
-      display         : 'flex',
-      alignItems      : 'center',
-      justifyContent  : 'space-between',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '0 2rem',
+      height: '56px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     logo: {
-      display         : 'flex',
-      alignItems      : 'center',
-      gap             : '8px',
-      textDecoration  : 'none',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      textDecoration: 'none',
     },
     logoIcon: {
-      width           : '34px',
-      height          : '34px',
-      background      : 'var(--accent)',
-      borderRadius    : '10px',
-      display         : 'flex',
-      alignItems      : 'center',
-      justifyContent  : 'center',
-      color           : '#fff',
-      fontSize        : '18px',
-      flexShrink      : 0,
+      width: '34px',
+      height: '34px',
+      background: 'var(--accent)',
+      borderRadius: '8px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      fontSize: '18px',
+      flexShrink: 0,
     },
     logoText: {
-      fontWeight      : 600,
-      fontSize        : '17px',
-      color           : 'var(--text-primary)',
+      fontWeight: 600,
+      fontSize: '17px',
+      color: 'var(--text-primary)',
     },
     logoAccent: {
-      color           : 'var(--accent)',
+      color: 'var(--accent)',
     },
     desktopLinks: {
-      display         : 'flex',
-      alignItems      : 'center',
-      gap             : '2rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '2rem',
     },
     link: (active) => ({
-      fontSize        : '14px',
-      fontWeight      : active ? 600 : 400,
-      color           : active ? 'var(--accent)' : 'var(--text-secondary)',
-      textDecoration  : 'none',
-      borderBottom    : active ? '2px solid var(--accent)' : '2px solid transparent',
-      paddingBottom   : '2px',
-      transition      : 'color 0.2s, border-color 0.2s',
+      fontSize: '14px',
+      fontWeight: active ? 600 : 400,
+      color: active ? 'var(--accent)' : 'var(--text-secondary)',
+      textDecoration: 'none',
+      borderBottom: active ? '2px solid var(--accent)' : '2px solid transparent',
+      paddingBottom: '2px',
+      transition: 'color 0.2s, border-color 0.2s',
     }),
     actions: {
-      display         : 'flex',
-      alignItems      : 'center',
-      gap             : '10px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
     },
     iconBtn: {
-      width           : '36px',
-      height          : '36px',
-      display         : 'flex',
-      alignItems      : 'center',
-      justifyContent  : 'center',
-      borderRadius    : '8px',
-      border          : '1px solid var(--border-color)',
-      background      : 'var(--bg-secondary)',
-      cursor          : 'pointer',
-      fontSize        : '16px',
-      transition      : 'border-color 0.2s',
+      width: '36px',
+      height: '36px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '8px',
+      border: '1px solid var(--border-color)',
+      background: 'var(--bg-secondary)',
+      cursor: 'pointer',
+      fontSize: '16px',
+      transition: 'border-color 0.2s',
     },
     badge: {
-      display         : 'flex',
-      alignItems      : 'center',
-      gap             : '8px',
-      padding         : '5px 12px',
-      borderRadius    : '8px',
-      background      : 'var(--accent-light)',
-      border          : '1px solid var(--accent-border)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '5px 12px',
+      borderRadius: '8px',
+      background: 'var(--accent-light)',
+      border: '1px solid var(--accent-border)',
     },
     badgeAvatar: {
-      width           : '24px',
-      height          : '24px',
-      borderRadius    : '50%',
-      background      : 'var(--accent)',
-      display         : 'flex',
-      alignItems      : 'center',
-      justifyContent  : 'center',
-      color           : '#fff',
-      fontSize        : '11px',
-      fontWeight      : 700,
-      flexShrink      : 0,
+      width: '24px',
+      height: '24px',
+      borderRadius: '50%',
+      background: 'var(--accent)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+      fontSize: '11px',
+      fontWeight: 700,
+      flexShrink: 0,
     },
     badgeText: {
-      fontSize        : '13px',
-      fontWeight      : 500,
-      color           : 'var(--accent-text)',
+      fontSize: '13px',
+      fontWeight: 500,
+      color: 'var(--accent-text)',
     },
     outlineBtn: {
-      fontSize        : '13px',
-      padding         : '6px 14px',
-      borderRadius    : '8px',
-      border          : '1px solid var(--border-color)',
-      background      : 'transparent',
-      color           : 'var(--text-secondary)',
-      cursor          : 'pointer',
-      transition      : 'border-color 0.2s, color 0.2s',
+      fontSize: '13px',
+      padding: '6px 14px',
+      borderRadius: '8px',
+      border: '1px solid var(--border-color)',
+      background: 'transparent',
+      color: 'var(--text-secondary)',
+      cursor: 'pointer',
+      transition: 'border-color 0.2s, color 0.2s',
     },
     loginLink: {
-      fontSize        : '13px',
-      padding         : '6px 14px',
-      borderRadius    : '8px',
-      border          : '1px solid var(--border-color)',
-      background      : 'transparent',
-      color           : 'var(--text-secondary)',
-      textDecoration  : 'none',
-      transition      : 'border-color 0.2s, color 0.2s',
+      fontSize: '13px',
+      padding: '6px 14px',
+      borderRadius: '8px',
+      border: '1px solid var(--border-color)',
+      background: 'transparent',
+      color: 'var(--text-secondary)',
+      textDecoration: 'none',
+      transition: 'border-color 0.2s, color 0.2s',
     },
     registerLink: {
-      fontSize        : '13px',
-      padding         : '6px 16px',
-      borderRadius    : '8px',
-      border          : 'none',
-      background      : 'var(--accent)',
-      color           : '#fff',
-      fontWeight      : 500,
-      textDecoration  : 'none',
-      transition      : 'background 0.2s',
+      fontSize: '13px',
+      padding: '6px 16px',
+      borderRadius: '8px',
+      border: 'none',
+      background: 'var(--accent)',
+      color: '#fff',
+      fontWeight: 500,
+      textDecoration: 'none',
+      transition: 'background 0.2s',
     },
     mobileMenu: {
-      borderTop       : '1px solid var(--border-color)',
-      background      : 'var(--bg-primary)',
-      padding         : '1rem 2rem',
-      display         : 'flex',
-      flexDirection   : 'column',
-      gap             : '1rem',
-      transition      : 'background 0.3s',
+      borderTop: '1px solid var(--border-color)',
+      background: 'var(--bg-primary)',
+      padding: '1rem 2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
+      transition: 'background 0.3s',
     },
     mobileDivider: {
-      height          : '1px',
-      background      : 'var(--border-color)',
+      height: '1px',
+      background: 'var(--border-color)',
     },
     mobileLink: (active) => ({
-      fontSize        : '14px',
-      fontWeight      : active ? 600 : 400,
-      color           : active ? 'var(--accent)' : 'var(--text-secondary)',
-      textDecoration  : 'none',
+      fontSize: '14px',
+      fontWeight: active ? 600 : 400,
+      color: active ? 'var(--accent)' : 'var(--text-secondary)',
+      textDecoration: 'none',
     }),
     mobileLogout: {
-      textAlign       : 'left',
-      fontSize        : '14px',
-      fontWeight      : 500,
-      color           : 'var(--danger)',
-      background      : 'none',
-      border          : 'none',
-      cursor          : 'pointer',
-      padding         : 0,
+      textAlign: 'left',
+      fontSize: '14px',
+      fontWeight: 500,
+      color: 'var(--danger)',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      padding: 0,
     },
     mobileAuthRow: {
-      display         : 'flex',
-      gap             : '8px',
+      display: 'flex',
+      gap: '8px',
     },
     mobileLoginLink: {
-      flex            : 1,
-      textAlign       : 'center',
-      fontSize        : '14px',
-      padding         : '8px',
-      borderRadius    : '8px',
-      border          : '1px solid var(--border-color)',
-      color           : 'var(--text-secondary)',
-      textDecoration  : 'none',
+      flex: 1,
+      textAlign: 'center',
+      fontSize: '14px',
+      padding: '8px',
+      borderRadius: '8px',
+      border: '1px solid var(--border-color)',
+      color: 'var(--text-secondary)',
+      textDecoration: 'none',
     },
     mobileRegisterLink: {
-      flex            : 1,
-      textAlign       : 'center',
-      fontSize        : '14px',
-      padding         : '8px',
-      borderRadius    : '8px',
-      background      : 'var(--accent)',
-      color           : '#fff',
-      fontWeight      : 500,
-      textDecoration  : 'none',
-      border          : 'none',
+      flex: 1,
+      textAlign: 'center',
+      fontSize: '14px',
+      padding: '8px',
+      borderRadius: '8px',
+      background: 'var(--accent)',
+      color: '#fff',
+      fontWeight: 500,
+      textDecoration: 'none',
+      border: 'none',
     },
   };
 
@@ -255,12 +261,12 @@ const Navbar = () => {
         <Link to="/" style={styles.logo}>
           <div style={styles.logoIcon}><img className='rounded-2xl' src="favicon.png" alt="" /></div>
           <span style={styles.logoText}>
-            Type<span style={styles.logoAccent}>Bench</span>
+            Typ<span style={styles.logoAccent}>Swift</span>
           </span>
         </Link>
 
         {/* ── Desktop Nav Links ── */}
-        <div style={styles.desktopLinks}>
+        <div style={{...styles.desktopLinks,display: isMobile ? 'none' : 'flex',}}>
           {navLinks.map(({ path, label }) => (
             <Link
               key={path}
@@ -286,7 +292,7 @@ const Navbar = () => {
 
           {/* Logged in */}
           {isLoggedIn ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: isMobile ?'none' : 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={styles.badge}>
                 <div style={styles.badgeAvatar}>
                   {user?.username?.charAt(0).toUpperCase()}
@@ -300,18 +306,18 @@ const Navbar = () => {
                 style={styles.outlineBtn}
                 onMouseEnter={e => {
                   e.target.style.borderColor = 'var(--danger)';
-                  e.target.style.color       = 'var(--danger)';
+                  e.target.style.color = 'var(--danger)';
                 }}
                 onMouseLeave={e => {
                   e.target.style.borderColor = 'var(--border-color)';
-                  e.target.style.color       = 'var(--text-secondary)';
+                  e.target.style.color = 'var(--text-secondary)';
                 }}
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: isMobile ? 'none': 'flex', alignItems: 'center', gap: '8px' }}>
               <Link
                 to="/login"
                 style={styles.loginLink}
@@ -332,7 +338,7 @@ const Navbar = () => {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{
               ...styles.iconBtn,
-              display: 'none', // hidden on desktop via media query
+              display: isMobile ? 'flex' : 'none', // shows only on mobile
             }}
             id="hamburger"
           >
