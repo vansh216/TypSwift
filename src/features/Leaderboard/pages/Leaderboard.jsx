@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { fetchLeaderboard }    from '../api/leaderboard.api';
-import LeaderboardTable        from '../components/LeaderboardTable';
+import { fetchLeaderboard }    from '../api/Leaderboard.api.jsx';
+import LeaderboardTable        from '../components/LeaderboardTable.jsx';
 
 const TIME_MODES = [
   { label: 'All',    value: null },

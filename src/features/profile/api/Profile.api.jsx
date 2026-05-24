@@ -1,4 +1,4 @@
-import api from '../../../shared/api/axios';
+import api from '../../../shared/api/axios.jsx';
 
 
 export const fetchUserStats = async () => {

@@ -5,12 +5,12 @@ import {
   useCallback,
 } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth }                  from '../../../shared/context/AuthContext';
-import { fetchParagraph, submitTest } from '../api/test.api';
-import ModeSelector                 from '../components/ModeSelector';
-import Timer                        from '../components/Timer';
-import WpmCounter                   from '../components/WpmCounter';
-import TypingArea                   from '../components/TypingArea';
+import { useAuth }                  from '../../../shared/context/AuthContext.jsx';
+import { fetchParagraph, submitTest } from '../api/test.api.jsx';
+import ModeSelector                 from '../components/ModeSelector.jsx';
+import Timer                        from '../components/Timer.jsx';
+import WpmCounter                   from '../components/WpmCounter.jsx';
+import TypingArea                   from '../components/TypingArea.jsx';
 
 
 

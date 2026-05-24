@@ -1,4 +1,4 @@
-import api from '../../../shared/api/axios';
+import api from '../../../shared/api/axios.jsx';
 
 
 // fetch random paragraph based on filters

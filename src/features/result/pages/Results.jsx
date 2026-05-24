@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect }                from 'react';
-import ResultCard                   from '../components/ResultCard';
+import ResultCard                   from '../components/ResultCard.jsx';
 
 const Results = () => {
   const location = useLocation();

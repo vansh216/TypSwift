@@ -1,8 +1,8 @@
 import { useState }      from 'react';
 import { useNavigate }   from 'react-router-dom';
-import { useAuth }       from '../../../shared/context/AuthContext';
-import { loginApi }      from '../api/auth.api';
-import LoginForm         from '../components/LoginForm';
+import { useAuth }       from '../../../shared/context/AuthContext.jsx';
+import { loginApi }      from '../api/auth.api.jsx';
+import LoginForm         from '../components/LoginForm.jsx';
 
 const Login = () => {
   const { login } = useAuth();

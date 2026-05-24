@@ -1,10 +1,10 @@
 import { useState, useEffect }  from 'react';
-import { useAuth }              from '../../../shared/context/AuthContext';
-import { fetchUserStats }       from '../api/profile.api';
-import { fetchUserHistory }     from '../api/profile.api';
-import StatsCard                from '../components/StatsCard';
-import HistoryTable             from '../components/HistoryTable';
-import WpmChart                 from '../components/WpmChart';
+import { useAuth }              from '../../../shared/context/AuthContext.jsx';
+import { fetchUserStats }       from '../api/Profile.api.jsx';
+import { fetchUserHistory }     from '../api/Profile.api.jsx';
+import StatsCard                from '../components/StatsCard.jsx';
+import HistoryTable             from '../components/HistoryTable.jsx';
+import WpmChart                 from '../components/WpmChart.jsx';
 
 const Profile = () => {
   const { user }                      = useAuth();
