@@ -18,6 +18,7 @@ import Profile from './features/profile/pages/Profile.jsx'
 
 import './App.css'
 import Home from './features/Home/page/Home.jsx'
+import Test from './features/test/pages/Test.jsx'
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/leaderboard' element={<Leaderboard/>}/>
+                <Route path='/test' element={<Test/>}/>
 
                  <Route path="/results" element={
                 <ProtectedRoute>
