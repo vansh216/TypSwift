@@ -18,7 +18,7 @@ const TIME_MODES = [
 
 const FEATURES = [
   {
-    icon  : '⚡',
+    icon  : '📊',
     title : 'Real Time WPM',
     desc  : 'Live words per minute counter updates on every single keystroke as you type.',
     bg    : '#fff7ed',
@@ -431,7 +431,7 @@ const Home = () => {
               e.currentTarget.style.boxShadow   = '0 4px 14px rgba(249,115,22,0.3)';
             }}
           >
-            Start Typing ⚡
+            Start Typing
           </button>
 
           {/* Guest / logged in notice */}
@@ -514,7 +514,7 @@ const Home = () => {
         <div style={s.sectionHeaderCenter}>
           <h2 style={s.sectionTitle}>Everything you need to improve</h2>
           <p style={s.sectionSubtitle}>
-            TypeBench gives you all the tools to track, improve, and compete.
+            TypSwift gives you all the tools to track, improve, and compete.
           </p>
         </div>
 
@@ -566,12 +566,12 @@ const Home = () => {
       ═══════════════════════════════ */}
       <div style={s.ctaSection}>
         <div style={s.ctaInner}>
-          <span style={s.ctaTag}>🚀 Ready to improve?</span>
+          <span style={s.ctaTag}>🏆 Ready to improve?</span>
           <h2 style={s.ctaTitle}>
             Start your typing journey today
           </h2>
           <p style={s.ctaSubtitle}>
-            Join TypeBench and discover how fast you can really type.
+            Join TypSwift and discover how fast you can really type.
             Track every test, beat your personal best, and climb the leaderboard.
           </p>
           <div style={s.ctaBtns}>
@@ -587,7 +587,7 @@ const Home = () => {
                 e.currentTarget.style.color      = '#fff';
               }}
             >
-              ⚡ Start Typing Now
+               Start Typing Now
             </button>
             {!isLoggedIn && (
               <button
