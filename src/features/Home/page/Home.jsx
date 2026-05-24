@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate }                 from 'react-router-dom';
 import { useAuth }                     from '../../../shared/context/AuthContext.jsx';
-import { fetchLeaderboard }            from '../../leaderboard/api/Leaderboard.api.jsx';
+import { fetchLeaderboard }            from '../../Leaderboard/api/Leaderboard.api.jsx';
 import { fetchUserHistory }            from '../../profile/api/Profile.api.jsx';
 
 // ─────────────────────────────────────────
