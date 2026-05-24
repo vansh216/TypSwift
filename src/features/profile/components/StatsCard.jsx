@@ -1,48 +1,53 @@
 const STATS = (stats) => [
   {
-    label  : 'Best WPM',
-    value  : stats.bestWpm,
-    suffix : 'wpm',
-    color  : 'var(--accent)',
-    icon   : '🚀',
-    bg     : 'var(--accent-light)',
-    border : 'var(--accent-border)',
+    label     : 'Best WPM',
+    value     : stats.bestWpm,
+    suffix    : 'wpm',
+    icon      : '🚀',
+    valueColor: 'var(--accent)',
+    labelColor: 'var(--text-secondary)',
+    bg        : 'var(--bg-secondary)',
+    border    : 'var(--border-color)',
   },
   {
-    label  : 'Average WPM',
-    value  : stats.averageWpm,
-    suffix : 'wpm',
-    color  : 'var(--text-primary)',
-    icon   : '📊',
-    bg     : 'var(--bg-secondary)',
-    border : 'var(--border-color)',
+    label     : 'Average WPM',
+    value     : stats.averageWpm,
+    suffix    : 'wpm',
+    icon      : '📊',
+    valueColor: 'var(--text-primary)',
+    labelColor: 'var(--text-secondary)',
+    bg        : 'var(--bg-secondary)',
+    border    : 'var(--border-color)',
   },
   {
-    label  : 'Avg Accuracy',
-    value  : stats.averageAccuracy,
-    suffix : '%',
-    color  : '#16a34a',
-    icon   : '🎯',
-    bg     : '#dcfce7',
-    border : '#86efac',
+    label     : 'Avg Accuracy',
+    value     : stats.averageAccuracy,
+    suffix    : '%',
+    icon      : '🎯',
+    valueColor: '#ffffff',
+    labelColor: 'rgba(255,255,255,0.8)',
+    bg        : '#16a34a',
+    border    : '#15803d',
   },
   {
-    label  : 'Total Tests',
-    value  : stats.totalTests,
-    suffix : '',
-    color  : '#1d4ed8',
-    icon   : '⌨️',
-    bg     : '#dbeafe',
-    border : '#93c5fd',
+    label     : 'Total Tests',
+    value     : stats.totalTests,
+    suffix    : '',
+    icon      : '⌨️',
+    valueColor: '#ffffff',
+    labelColor: 'rgba(255,255,255,0.8)',
+    bg        : '#2563eb',
+    border    : '#1d4ed8',
   },
   {
-    label  : 'Time Typed',
-    value  : stats.totalTimeMinutes,
-    suffix : 'min',
-    color  : '#7c3aed',
-    icon   : '⏱️',
-    bg     : '#ede9fe',
-    border : '#c4b5fd',
+    label     : 'Time Typed',
+    value     : stats.totalTimeMinutes,
+    suffix    : 'min',
+    icon      : '⏱️',
+    valueColor: '#ffffff',
+    labelColor: 'rgba(255,255,255,0.8)',
+    bg        : '#7c3aed',
+    border    : '#6d28d9',
   },
 ];
 
@@ -62,14 +67,14 @@ const StatsCard = ({ stats }) => {
         >
           <div style={s.iconRow}>
             <span style={s.icon}>{stat.icon}</span>
-            <span style={s.label}>{stat.label}</span>
+            <span style={{...s.label ,color:stat.labelColor}}>{stat.label}</span>
           </div>
           <div style={s.valueRow}>
-            <span style={{ ...s.value, color: stat.color }}>
+            <span style={{ ...s.value, color: stat.valueColor }}>
               {stat.value ?? 0}
             </span>
             {stat.suffix && (
-              <span style={s.suffix}>{stat.suffix}</span>
+              <span style={{...s.suffix ,color: stat.labelColor}}>{stat.suffix}</span>
             )}
           </div>
         </div>

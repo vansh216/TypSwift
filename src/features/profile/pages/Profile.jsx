@@ -67,8 +67,8 @@ const Profile = () => {
   };
 
   const TABS = [
-    { key: 'overview', label: '📊 Overview' },
-    { key: 'history',  label: '📋 History'  },
+    { key: 'overview', label: ' Overview' },
+    { key: 'history',  label: ' History'  },
   ];
 
   return (
@@ -96,7 +96,7 @@ const Profile = () => {
             )}
             {stats?.bestWpm >= 100 && (
               <span style={s.proBadge}>
-                🚀 Speed Pro
+                 Speed Pro
               </span>
             )}
           </div>
