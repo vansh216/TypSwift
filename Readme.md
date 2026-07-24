@@ -86,6 +86,62 @@ TypSwift/
 └── README.md
 ```
 
+## 🤖 AI Features (Coming Soon)
+
+TypSwift is integrating AI powered features to make
+your typing improvement journey smarter and more
+personalized than ever before.
+
+---
+### 📝 Feature 2 — AI Paragraph Generator
+
+Instead of only typing from a fixed paragraph pool —
+you will be able to choose any topic and AI will
+generate a completely fresh unique paragraph for you
+every single time.
+
+
+**Why this is useful:**
+- Never see the same paragraph twice
+- Practice typing content relevant to your field
+- Developers can practice tech vocabulary
+- Students can practice their subject content
+
+---
+
+### 📈 Feature 3 — AI Typing Coach
+
+After completing 5 or more tests, AI will analyze
+patterns across ALL your tests and generate a
+personalized improvement report and coaching plan.
+
+**What AI coach provides:**
+- Weekly progress summary with WPM trend analysis
+- Your strongest and weakest time modes identified
+- Personalized difficulty recommendation
+- Specific finger exercise suggestions based on
+  your most common error patterns
+- Predicted WPM target for next week based on
+  your improvement rate
+
+
+---
+
+
+
+
+### 🔍 Feature 1 — Post Test AI Analysis
+
+After every completed test, AI will analyze your
+performance in detail and give personalized feedback.
+
+**What AI will analyze:**
+- Which characters and words you made errors on most
+- At which exact second your WPM dropped
+- Your accuracy pattern across the test duration
+- Finger position error patterns (q/a/z confusion etc)
+- Punctuation and special character weak spots
+
 ---
 
 ## 🚀 Getting Started
