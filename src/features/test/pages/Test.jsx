@@ -220,6 +220,7 @@ const Test = () => {
   const correctCharsRef = useRef(0);
   const errorsRef       = useRef(0);
   const wpmHistoryRef   = useRef([]);
+  const charErrorsRef   = useRef([]);
 
   // Load paragraph on mount and mode change
  const [difficulty, setDifficulty] = useState('medium');
@@ -320,15 +321,15 @@ const Test = () => {
     }, 1000);
   }, [testState]);
 
-  // On every keystroke from TypingArea
 
-  const handleProgress = useCallback(({ correctChars, wrongChars, accuracy, totalTyped }) => {
+  // AFTER — add charErrors parameter and one line
+const handleProgress = useCallback(({ correctChars, wrongChars, accuracy, totalTyped, charErrors }) => {
     if (testState === 'idle') startTest();
 
     correctCharsRef.current = correctChars;
     errorsRef.current       = wrongChars;
+    charErrorsRef.current   = charErrors || [];  // ← ADD THIS LINE
 
-    // Live WPM
     if (startTimeRef.current) {
       const elapsed = (Date.now() - startTimeRef.current) / 1000 / 60;
       const liveWpm = elapsed > 0.05
@@ -340,7 +341,6 @@ const Test = () => {
     setAccuracy(accuracy);
     setErrors(wrongChars);
   }, [testState, startTest]);
-
   // When paragraph is fully typed
 
   const handleComplete = useCallback(async ({ typed, charStates }) => {
@@ -367,10 +367,16 @@ const Test = () => {
     if (isLoggedIn) {
       try {
         await submitTest(resultData);
-        navigate('/results', { state: { result: resultData } });
+        navigate('/results', { state: { result: resultData ,
+            charErrors: charErrorsRef.current,
+          }
+         });
       } catch (err) {
         // If submit fails still show results
-        navigate('/results', { state: { result: resultData } });
+        navigate('/results', { state: { result: resultData,
+            charErrors: charErrorsRef.current, 
+          } 
+        });
       }
     } else {
       setInlineResult(resultData);
@@ -402,9 +408,9 @@ const Test = () => {
     if (isLoggedIn) {
       try {
         await submitTest(resultData);
-        navigate('/results', { state: { result: resultData } });
+        navigate('/results', { state: { result: resultData,charErrors: charErrorsRef.current, } });
       } catch (err) {
-        navigate('/results', { state: { result: resultData } });
+        navigate('/results', { state: { result: resultData, charErrors: charErrorsRef.current, } });
       }
     } else {
       setInlineResult(resultData);
