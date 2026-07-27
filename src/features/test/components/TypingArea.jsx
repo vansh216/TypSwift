@@ -39,12 +39,13 @@ const TypingArea = ({
     }
   };
 
-  const handleInput = (e) => {
+  // AFTER — tracks which specific chars were wrong
+const handleInput = (e) => {
     if (!isActive || isFinished || !paragraph) return;
 
-    const value = e.target.value;
-    const newTyped = value;
-    const newStates = paragraph.split('').map((char, i) => {
+    const value      = e.target.value;
+    const newTyped   = value;
+    const newStates  = paragraph.split('').map((char, i) => {
       if (i >= newTyped.length) return 'untyped';
       return newTyped[i] === char ? 'correct' : 'wrong';
     });
@@ -55,17 +56,30 @@ const TypingArea = ({
 
     // Calculate stats
     const correctChars = newStates.filter(s => s === 'correct').length;
-    const wrongChars = newStates.filter(s => s === 'wrong').length;
-    const totalTyped = newTyped.length;
-    const accuracy = totalTyped > 0
+    const wrongChars   = newStates.filter(s => s === 'wrong').length;
+    const totalTyped   = newTyped.length;
+    const accuracy     = totalTyped > 0
       ? Math.round((correctChars / totalTyped) * 100)
       : 100;
 
-    onProgress({ correctChars, wrongChars, accuracy, totalTyped });
+    // ── NEW — build charErrors array ──
+   // NEW — added this block
+const charErrors = [];
+paragraph.split('').forEach((char, i) => {
+  if (i < newTyped.length && newTyped[i] !== char) {
+    charErrors.push({
+      expected: char,
+      typed    : newTyped[i],
+      position : i,
+    });
+  }
+});
+
+    onProgress({ correctChars, wrongChars, accuracy, totalTyped, charErrors });
 
     // Check if paragraph complete
     if (newTyped.length >= paragraph.length) {
-      onComplete({ typed: newTyped, charStates: newStates });
+      onComplete({ typed: newTyped, charStates: newStates, charErrors });
     }
   };
 
