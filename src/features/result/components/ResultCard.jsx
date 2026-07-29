@@ -1,3 +1,4 @@
+import AIAnalysis from './AIAnalysis';
 import {
   LineChart,
   Line,
@@ -8,7 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const ResultCard = ({ result }) => {
+const ResultCard = ({ result, charErrors }) => {
   const {
     wpm,
     accuracy,
@@ -37,14 +38,23 @@ const minute= num.toFixed(2);
   return (
     <div style={s.card}>
 
+        {/* AI Analysis  */}
+    
+
+    {/* ── Divider ── */}
+    <div style={s.divider} />
+    
+
       {/* ── Stats Grid ── */}
       <div style={s.statsGrid}>
+        
 
         {/* WPM */}
         <div style={s.statBox}>
           <span style={s.statValue(true)}>{wpm}</span>
           <span style={s.statLabel}>WPM</span>
         </div>
+        
 
         {/* Accuracy */}
         <div style={s.statBox}>
@@ -103,6 +113,10 @@ const minute= num.toFixed(2);
           </span>
         )}
       </div>
+      <AIAnalysis
+      result={result}
+      charErrors={charErrors}
+    />
 
       {/* ── WPM Chart ── */}
       {chartData.length > 0 && (
