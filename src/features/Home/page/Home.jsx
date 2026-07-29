@@ -50,6 +50,14 @@ const FEATURES = [
     color : '#7c3aed',
   },
   {
+    icon  : '🤖',
+    title : 'AI Performance Analysis',
+    desc  : 'After every test AI analyzes your mistakes, speed patterns, and gives personalized tips to improve faster.',
+    bg    : '#ede9fe',
+    border: '#c4b5fd',
+    color : '#7c3aed',
+  },
+  {
     icon  : '⏱️',
     title : 'Multiple Time Modes',
     desc  : 'Choose from 1, 2, 3, 5, 10 minutes or set a custom duration that fits you.',
@@ -57,14 +65,7 @@ const FEATURES = [
     border: '#fde047',
     color : '#854d0e',
   },
-  {
-    icon  : '🌙',
-    title : 'Dark & Light Mode',
-    desc  : 'Easy on the eyes whether you prefer a bright workspace or dark environment.',
-    bg    : '#f0fdf4',
-    border: '#bbf7d0',
-    color : '#166534',
-  },
+  
 ];
 
 const HOW_IT_WORKS = [
