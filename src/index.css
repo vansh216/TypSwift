@@ -103,3 +103,8 @@ body {
   --text-muted: rgba(255, 255, 255, 0.25);
 }
 
+@keyframes skeleton {
+  0%   { opacity: 1;   }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1;   }
+}
