@@ -6,6 +6,7 @@ const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const result   = location.state?.result;
+  const charErrors = location.state?.charErrors || [];
 
   // If no result data — redirect to home
   useEffect(() => {
@@ -19,12 +20,12 @@ const Results = () => {
 
       {/* ── Header ── */}
       <div style={s.header}>
-        <h1 style={s.title}>Test Complete! 🎉</h1>
+        <h1 style={s.title}>Test Complete! </h1>
         <p style={s.subtitle}>Here is how you performed</p>
       </div>
 
       {/* ── Result Card ── */}
-      <ResultCard result={result} />
+      <ResultCard result={result} charErrors={charErrors} />
 
       {/* ── Actions ── */}
       <div style={s.actions}>
