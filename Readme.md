@@ -13,65 +13,65 @@ TypSwift/
 │   └── favicon.ico
 │
 ├── src/
-│   ├── features/
-|   |   ├── Home/
-|   |   |    ├── page/
-|   |   |          ├── Home.jsx
-|   |   |       
-│   │   ├── auth/
-│   │   │   ├── components/
-│   │   │   │   ├── LoginForm.jsx
-│   │   │   │   └── RegisterForm.jsx
-│   │   │   ├── pages/
-│   │   │   │   ├── Login.jsx
-│   │   │   │   └── Register.jsx
-│   │   │   └── api/
-│   │   │       └── auth.api.js
-│   │   │
-│   │   ├── test/
-│   │   │   ├── components/
-│   │   │   │   ├── TypingArea.jsx
-│   │   │   │   ├── Timer.jsx
-│   │   │   │   ├── WpmCounter.jsx
-│   │   │   │   └── ModeSelector.jsx
-│   │   │   ├── pages/
-│   │   │   │   └── Test.jsx
-│   │   │   └── api/
-│   │   │       └── test.api.js
-│   │   │
-│   │   ├── leaderboard/
-│   │   │   ├── components/
-│   │   │   │   └── LeaderboardTable.jsx
-│   │   │   ├── pages/
-│   │   │   │   └── Leaderboard.jsx
-│   │   │   └── api/
-│   │   │       └── leaderboard.api.js
-│   │   │
-│   │   ├── profile/
-│   │   │   ├── components/
-│   │   │   │   ├── StatsCard.jsx
-│   │   │   │   ├── HistoryTable.jsx
-│   │   │   │   └── WpmChart.jsx
-│   │   │   ├── pages/
-│   │   │   │   └── Profile.jsx
-│   │   │   └── api/
-│   │   │       └── profile.api.js
-│   │   │
-│   │   └── results/
-│   │       ├── components/
-│   │       │   └── ResultCard.jsx
-│   │       └── pages/
-│   │           └── Results.jsx
-│   │
-│   ├── shared/
+├── features/
+│   ├── auth/
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   └── Loader.jsx
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx
+│   │   │   ├── LoginForm.jsx         # Login form component
+│   │   │   └── RegisterForm.jsx      # Register form component
+│   │   ├── pages/
+│   │   │   ├── Login.jsx             # Login page
+│   │   │   └── Register.jsx          # Register page
 │   │   └── api/
-│   │       └── axios.js
+│   │       └── auth.api.js           # Auth API calls (login, register)
+│   │
+│   ├── test/
+│   │   ├── components/
+│   │   │   ├── TypingArea.jsx        # Main typing input area
+│   │   │   ├── Timer.jsx             # Countdown timer
+│   │   │   ├── WpmCounter.jsx        # Live WPM display
+│   │   │   └── ModeSelector.jsx      # Time mode selector (1,2,3,5,10 min)
+│   │   ├── pages/
+│   │   │   └── Test.jsx              # Main test page
+│   │   └── api/
+│   │       └── test.api.js           # Fetch paragraph, submit result
+│   │
+│   ├── leaderboard/
+│   │   ├── components/
+│   │   │   └── LeaderboardTable.jsx  # Leaderboard rankings table
+│   │   ├── pages/
+│   │   │   └── Leaderboard.jsx       # Leaderboard page
+│   │   └── api/
+│   │       └── leaderboard.api.js    # Fetch leaderboard data
+│   │
+│   ├── profile/
+│   │   ├── components/
+│   │   │   ├── StatsCard.jsx         # WPM, accuracy, total tests cards
+│   │   │   ├── HistoryTable.jsx      # Past test results table
+│   │   │   └── WpmChart.jsx          # WPM progress chart (recharts)
+│   │   ├── pages/
+│   │   │   └── Profile.jsx           # User profile/dashboard page
+│   │   └── api/
+│   │       └── profile.api.js        # Fetch history and stats
+│   │
+│   └── results/
+│       ├── components/
+│       │   └── ResultCard.jsx        # Single test result display
+│       └── pages/
+│           └── Results.jsx           # Results page after test ends
+│
+├── shared/
+│   ├── components/
+│   │   ├── Navbar.jsx                # Top navigation bar
+│   │   ├── ProtectedRoute.jsx        # Blocks unauthenticated users
+│   │   └── Loader.jsx                # Loading spinner
+│   ├── context/
+│   │   └── AuthContext.jsx           # Global auth state (user, token, login, logout)
+│   └── api/
+│       └── axios.js                  # Axios base config with interceptors
+│
+├── App.jsx                           # Routes setup
+├── main.jsx                          # App entry point
+└── index.css                         # Tailwind v4 import
 │   │
 │   ├── App.jsx
 │   ├── main.jsx
