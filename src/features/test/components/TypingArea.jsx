@@ -11,6 +11,7 @@ const TypingArea = ({
   const [cursorPos, setCursorPos] = useState(0);
   const charRefs = useRef([]);
   const typedRef = useRef('');
+  const scrollRef = useRef(null);
 
   // Reset typing state whenever a new paragraph arrives (render-time reset)
   const [prevParagraph, setPrevParagraph] = useState(paragraph);
@@ -24,6 +25,7 @@ const TypingArea = ({
   useEffect(() => {
     typedRef.current = '';
     charRefs.current = [];
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, [paragraph]);
 
   // Shared logic: apply the next typed value, update stats + completion.
@@ -100,6 +102,35 @@ const TypingArea = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isActive, isFinished, paragraph, processInput]);
 
+  // Auto-scroll so the cursor stays in view — only moves the scrollbar when
+  // the cursor would otherwise leave the visible area (Monkeytype-style).
+  useEffect(() => {
+    const box = scrollRef.current;
+    if (!box || !isActive || isFinished || !paragraph) return;
+    const chars = paragraph.split('');
+
+    if (cursorPos >= chars.length) {
+      box.scrollTop = box.scrollHeight;
+      return;
+    }
+
+    const charEl = charRefs.current[cursorPos];
+    if (!charEl) return;
+
+    const boxTop      = box.getBoundingClientRect().top;
+    const charTop     = charEl.getBoundingClientRect().top;
+    const boxHeight   = box.clientHeight;
+
+    // Cursor scrolled above the visible area → bring it to ~35% from top
+    if (charTop < boxTop) {
+      box.scrollTop -= (boxTop - charTop) - boxHeight * 0.35;
+    }
+    // Cursor below the visible area → scroll down to reveal it
+    else if (charTop > boxTop + boxHeight - charEl.offsetHeight) {
+      box.scrollTop += (charTop - (boxTop + boxHeight)) + charEl.offsetHeight + boxHeight * 0.35;
+    }
+  }, [cursorPos, isActive, isFinished, paragraph]);
+
   if (!paragraph) return null;
 
   const chars = paragraph.split('');
@@ -107,39 +138,41 @@ const TypingArea = ({
   return (
     <div style={s.wrapper}>
       <div style={s.paragraphWrap}>
-        <div style={s.paragraph} id="paragraph-container">
-          {chars.map((char, i) => {
-            const state = charStates[i] || 'untyped';
-            const isCursor = i === cursorPos;
+        <div ref={scrollRef} style={s.scrollBox}>
+          <div style={s.paragraph} id="paragraph-container">
+            {chars.map((char, i) => {
+              const state = charStates[i] || 'untyped';
+              const isCursor = i === cursorPos;
 
-            return (
-              <span
-                key={i}
-                ref={el => charRefs.current[i] = el}
-                style={{
-                  ...s.char,
-                  color: state === 'correct' ? 'var(--text-primary)'
-                    : state === 'wrong' ? '#dc2626'
-                      : 'var(--char-untyped)',
+              return (
+                <span
+                  key={i}
+                  ref={el => charRefs.current[i] = el}
+                  style={{
+                    ...s.char,
+                    color: state === 'correct' ? 'var(--text-primary)'
+                      : state === 'wrong' ? '#dc2626'
+                        : 'var(--char-untyped)',
 
-                  background: state === 'wrong' ? 'rgba(220,38,38,0.12)' : 'transparent',
+                    background: state === 'wrong' ? 'rgba(220,38,38,0.12)' : 'transparent',
 
-                  borderBottom: state === 'wrong' ? '2px solid #dc2626' : 'none',
+                    borderBottom: state === 'wrong' ? '2px solid #dc2626' : 'none',
 
-                  borderLeft: isCursor && isActive && !isFinished
-                    ? '2px solid var(--accent)'
-                    : 'none',
-                }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </span>
-            );
-          })}
+                    borderLeft: isCursor && isActive && !isFinished
+                      ? '2px solid var(--accent)'
+                      : 'none',
+                  }}
+                >
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              );
+            })}
 
-          {/* Cursor at end of paragraph */}
-          {cursorPos >= chars.length && isActive && !isFinished && (
-            <span style={s.endCursor}>|</span>
-          )}
+            {/* Cursor at end of paragraph */}
+            {cursorPos >= chars.length && isActive && !isFinished && (
+              <span style={s.endCursor}>|</span>
+            )}
+          </div>
         </div>
 
         {/* Press-any-key hint shown before the test starts */}
@@ -162,6 +195,13 @@ const s = {
     position : 'relative',
     cursor   : 'text',
     userSelect: 'none',
+  },
+  scrollBox: {
+    maxHeight   : 'clamp(150px, 30vh, 280px)',
+    overflowY   : 'auto',
+    overscrollBehavior: 'contain',
+    scrollbarWidth: 'thin',
+    scrollbarColor: 'var(--border-color) transparent',
   },
   paragraph: {
     fontFamily: "'Courier New', Courier, monospace",
