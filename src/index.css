@@ -14,12 +14,18 @@
   /* Page level */
   --bg-primary     : #ffffff;
   --bg-secondary   : #f9fafb;
+  --bg-tertiary    : #f3f4f6;
   --text-primary   : #111827;
   --text-secondary : #6b7280;
+  --text-muted     : #9ca3af;
   --border-color   : #e5e7eb;
   --card-bg        : #ffffff;
   --accent         : #f97316;
   --accent-hover   : #ea580c;
+  --accent-light   : #fff7ed;
+  --accent-border  : #fed7aa;
+  --char-untyped   : #9ca3af;
+  --shadow         : 0 4px 24px rgba(17, 24, 39, 0.08);
 }
 
 .dark {
@@ -37,12 +43,18 @@
   /* Page level */
   --bg-primary     : #030712;
   --bg-secondary   : #111827;
+  --bg-tertiary    : #1f2937;
   --text-primary   : #f9fafb;
   --text-secondary : #9ca3af;
+  --text-muted     : rgba(255, 255, 255, 0.25);
   --border-color   : #1f2937;
   --card-bg        : #111827;
   --accent         : #f97316;
   --accent-hover   : #ea580c;
+  --accent-light   : #431407;
+  --accent-border  : #7c2d12;
+  --char-untyped   : rgba(255, 255, 255, 0.25);
+  --shadow         : 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -95,13 +107,6 @@ body {
 }
 
 /* Paragraph text muted color for both themes */
-:root {
-  --text-muted: #9ca3af;
-}
-
-.dark {
-  --text-muted: rgba(255, 255, 255, 0.25);
-}
 
 @keyframes skeleton {
   0%   { opacity: 1;   }
