@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const TypingArea = ({
   paragraph,
@@ -7,50 +7,47 @@ const TypingArea = ({
   isActive,
   isFinished,
 }) => {
-  const [typed, setTyped] = useState('');
   const [charStates, setCharStates] = useState([]);
   const [cursorPos, setCursorPos] = useState(0);
-  const inputRef = useRef(null);
   const charRefs = useRef([]);
+  const typedRef = useRef('');
 
-  // Focus input when test becomes active
-  useEffect(() => {
-    if (isActive && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isActive]);
-
-  // Build char states whenever paragraph changes
-  useEffect(() => {
-    if (!paragraph) return;
-    setCharStates(paragraph.split('').map(() => 'untyped'));
-    setTyped('');
+  // Reset typing state whenever a new paragraph arrives (render-time reset)
+  const [prevParagraph, setPrevParagraph] = useState(paragraph);
+  if (paragraph !== prevParagraph) {
+    setPrevParagraph(paragraph);
+    setCharStates((paragraph || '').split('').map(() => 'untyped'));
     setCursorPos(0);
+  }
+
+  // Reset refs (allowed in effects only)
+  useEffect(() => {
+    typedRef.current = '';
     charRefs.current = [];
   }, [paragraph]);
 
-  const handleKeyDown = (e) => {
-    if (!isActive || isFinished) return;
-
-    // Tab = restart (handled in parent)
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      return;
-    }
-  };
-
-  // AFTER — tracks which specific chars were wrong
-const handleInput = (e) => {
+  // Shared logic: apply the next typed value, update stats + completion.
+  // Called by both keystroke capture and backspace handling.
+  const processInput = useCallback((newTyped) => {
     if (!isActive || isFinished || !paragraph) return;
 
-    const value      = e.target.value;
-    const newTyped   = value;
-    const newStates  = paragraph.split('').map((char, i) => {
+    const newStates = paragraph.split('').map((char, i) => {
       if (i >= newTyped.length) return 'untyped';
       return newTyped[i] === char ? 'correct' : 'wrong';
     });
 
-    setTyped(newTyped);
+    const charErrors = [];
+    paragraph.split('').forEach((char, i) => {
+      if (i < newTyped.length && newTyped[i] !== char) {
+        charErrors.push({
+          expected: char,
+          typed   : newTyped[i],
+          position: i,
+        });
+      }
+    });
+
+    typedRef.current = newTyped;
     setCharStates(newStates);
     setCursorPos(newTyped.length);
 
@@ -62,66 +59,54 @@ const handleInput = (e) => {
       ? Math.round((correctChars / totalTyped) * 100)
       : 100;
 
-    // ── NEW — build charErrors array ──
-   // NEW — added this block
-const charErrors = [];
-paragraph.split('').forEach((char, i) => {
-  if (i < newTyped.length && newTyped[i] !== char) {
-    charErrors.push({
-      expected: char,
-      typed    : newTyped[i],
-      position : i,
-    });
-  }
-});
-
     onProgress({ correctChars, wrongChars, accuracy, totalTyped, charErrors });
 
     // Check if paragraph complete
     if (newTyped.length >= paragraph.length) {
       onComplete({ typed: newTyped, charStates: newStates, charErrors });
     }
-  };
+  }, [paragraph, isActive, isFinished, onProgress, onComplete]);
+
+  // Capture keystrokes from the window — no focused <input> means the OS
+  // never shows its text-suggestion bar (that's how Monkeytype/keybr work).
+  useEffect(() => {
+    if (!isActive || isFinished || !paragraph) return;
+
+    const handleKeyDown = (e) => {
+      // Ignore typing happening inside real form fields
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      // Tab / Escape are handled by the parent (Test.jsx)
+      if (e.key === 'Tab' || e.key === 'Escape') return;
+
+      // Ignore shortcuts (Ctrl/Cmd/Alt combos)
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        processInput(typedRef.current.slice(0, -1));
+        return;
+      }
+
+      // Only printable single characters (letters, digits, punct, space)
+      if (e.key.length === 1) {
+        e.preventDefault();
+        processInput(typedRef.current + e.key);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isActive, isFinished, paragraph, processInput]);
 
   if (!paragraph) return null;
 
   const chars = paragraph.split('');
 
-  // Get cursor position on screen
-  const getCursorStyle = () => {
-    const ref = charRefs.current[cursorPos];
-    if (!ref) return {};
-    const rect = ref.getBoundingClientRect();
-    const parentRect = ref.parentElement?.getBoundingClientRect();
-    return {
-      left: ref.offsetLeft,
-      top: ref.offsetTop,
-    };
-  };
-
   return (
     <div style={s.wrapper}>
-
-      {/* Hidden input captures all keystrokes */}
-      <input
-        ref={inputRef}
-        value={typed}
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
-        style={s.hiddenInput}
-        disabled={!isActive || isFinished}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
-        aria-label="Typing input"
-      />
-
-      {/* Paragraph display */}
-      <div
-        style={s.paragraphWrap}
-        onClick={() => inputRef.current?.focus()}
-      >
+      <div style={s.paragraphWrap}>
         <div style={s.paragraph} id="paragraph-container">
           {chars.map((char, i) => {
             const state = charStates[i] || 'untyped';
@@ -141,12 +126,8 @@ paragraph.split('').forEach((char, i) => {
 
                   borderBottom: state === 'wrong' ? '2px solid #dc2626' : 'none',
 
-                  opacity: 1,
                   borderLeft: isCursor && isActive && !isFinished
                     ? '2px solid var(--accent)'
-                    : 'none',
-                  animation: isCursor && isActive && !isFinished
-                    ? 'none'
                     : 'none',
                 }}
               >
@@ -161,14 +142,13 @@ paragraph.split('').forEach((char, i) => {
           )}
         </div>
 
-        {/* Click to focus hint */}
-        {!isActive && !isFinished && (
+        {/* Press-any-key hint shown before the test starts */}
+        {!isFinished && cursorPos === 0 && isActive && (
           <div style={s.focusHint}>
-            Click here or press any key to start
+            Press any key to start
           </div>
         )}
       </div>
-
     </div>
   );
 };
@@ -176,56 +156,48 @@ paragraph.split('').forEach((char, i) => {
 const s = {
   wrapper: {
     position: 'relative',
-    width: '100%',
-  },
-  hiddenInput: {
-    position: 'absolute',
-    opacity: 0,
-    width: '1px',
-    height: '1px',
-    overflow: 'hidden',
-    pointerEvents: 'none',
+    width   : '100%',
   },
   paragraphWrap: {
-    position: 'relative',
-    cursor: 'text',
+    position : 'relative',
+    cursor   : 'text',
     userSelect: 'none',
   },
   paragraph: {
     fontFamily: "'Courier New', Courier, monospace",
-    fontSize: '20px',
-    lineHeight: '2',
+    fontSize  : 'clamp(16px, 2.4vw, 20px)',
+    lineHeight: '1.9',
     letterSpacing: '0.03em',
-    color: 'var(--text-muted)',
+    color    : 'var(--text-muted)',
     wordBreak: 'break-word',
     minHeight: '120px',
   },
   char: {
-    display: 'inline',
+    display   : 'inline',
     transition: 'color 0.1s',
     borderRadius: '2px',
-    padding: '0 1px',
+    padding   : '0 1px',
   },
   endCursor: {
-    display: 'inline',
-    color: 'var(--accent)',
+    display   : 'inline',
+    color     : 'var(--accent)',
     fontWeight: 300,
-    animation: 'blink 1s step-end infinite',
+    animation : 'blink 1s step-end infinite',
   },
   focusHint: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    background: 'var(--card-bg)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '8px',
-    padding: '8px 16px',
-    fontSize: '13px',
-    color: 'var(--text-muted)',
+    position     : 'absolute',
+    top          : '50%',
+    left         : '50%',
+    transform    : 'translate(-50%, -50%)',
+    background   : 'var(--card-bg)',
+    border       : '1px solid var(--border-color)',
+    borderRadius : '8px',
+    padding      : '8px 16px',
+    fontSize     : 'clamp(12px, 2vw, 14px)',
+    color        : 'var(--text-secondary)',
     pointerEvents: 'none',
-    whiteSpace: 'nowrap',
-    boxShadow: 'var(--shadow)',
+    whiteSpace   : 'nowrap',
+    boxShadow    : 'var(--shadow)',
   },
 };
 
