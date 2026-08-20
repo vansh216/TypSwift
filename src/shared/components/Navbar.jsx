@@ -57,6 +57,7 @@ const Navbar = () => {
 
   const navLinks = [
     { path: '/', label: 'Home' },
+    { path: '/multiplayer', label: '⚔️ Battle'   },
     { path: '/leaderboard', label: 'Leaderboard' },
     ...(isLoggedIn ? [{ path: '/profile', label: 'Profile' }] : []),
   ];
