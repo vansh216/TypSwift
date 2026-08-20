@@ -20,6 +20,13 @@ import './App.css'
 import Home from './features/Home/page/Home.jsx'
 import Test from './features/test/pages/Test.jsx'
 
+// socket connection
+import Lobby       from './features/multiplayer/pages/Lobby.jsx';
+import WaitingRoom from './features/multiplayer/pages/WaitingRoom';
+import Battle      from './features/multiplayer/pages/Battle';
+
+import { SocketProvider } from './features/multiplayer/context/SocketContext.jsx';
+
 
 function App() {
 
@@ -27,6 +34,9 @@ function App() {
 
     <BrowserRouter>
     <AuthProvider>
+      <SocketProvider>
+               
+
       <div className="min-h-screen">
         <Navbar/>
 
@@ -39,17 +49,34 @@ function App() {
                 <Route path='/test' element={<Test/>}/>
 
                  <Route path="/results" element={
-                <ProtectedRoute>
+                   <ProtectedRoute>
                   <Results />
                 </ProtectedRoute>
                  }/>
 
                   <Route path="/profile" element={
-                <ProtectedRoute>
+                    <ProtectedRoute>
                   <Profile />
                 </ProtectedRoute>
                 
                  }/>
+                 <Route path="/multiplayer" element={
+                <ProtectedRoute>
+                 <Lobby />
+                </ProtectedRoute>
+                 } />
+
+                 <Route path="/multiplayer/waiting" element={
+                   <ProtectedRoute >
+                 <WaitingRoom />
+                </ProtectedRoute>
+                 } />
+                 
+                 <Route path="/multiplayer/battle" element={
+                <ProtectedRoute >
+                 <Battle />
+                </ProtectedRoute>
+                 } />
 
 
           </Routes>
@@ -59,6 +86,7 @@ function App() {
 
      
       </div>
+       </SocketProvider>
     </AuthProvider>
     </BrowserRouter>
   )
