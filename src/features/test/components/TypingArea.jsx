@@ -8,12 +8,16 @@ const TypingArea = ({
   isFinished,
 }) => {
   const [charStates, setCharStates] = useState([]);
-  const [cursorPos, setCursorPos] = useState(0);
-  const charRefs = useRef([]);
-  const typedRef = useRef('');
+  const [cursorPos,  setCursorPos]  = useState(0);
+  const charRefs  = useRef([]);
+  const typedRef  = useRef('');
   const scrollRef = useRef(null);
+  const inputRef  = useRef(null);
 
-  // Reset typing state whenever a new paragraph arrives (render-time reset)
+  // ── Detect mobile ──
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  // Reset typing state whenever a new paragraph arrives
   const [prevParagraph, setPrevParagraph] = useState(paragraph);
   if (paragraph !== prevParagraph) {
     setPrevParagraph(paragraph);
@@ -21,15 +25,15 @@ const TypingArea = ({
     setCursorPos(0);
   }
 
-  // Reset refs (allowed in effects only)
+  // Reset refs on paragraph change
   useEffect(() => {
     typedRef.current = '';
     charRefs.current = [];
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    if (inputRef.current)  inputRef.current.value      = '';
   }, [paragraph]);
 
-  // Shared logic: apply the next typed value, update stats + completion.
-  // Called by both keystroke capture and backspace handling.
+  // Core processing function
   const processInput = useCallback((newTyped) => {
     if (!isActive || isFinished || !paragraph) return;
 
@@ -53,7 +57,6 @@ const TypingArea = ({
     setCharStates(newStates);
     setCursorPos(newTyped.length);
 
-    // Calculate stats
     const correctChars = newStates.filter(s => s === 'correct').length;
     const wrongChars   = newStates.filter(s => s === 'wrong').length;
     const totalTyped   = newTyped.length;
@@ -63,26 +66,20 @@ const TypingArea = ({
 
     onProgress({ correctChars, wrongChars, accuracy, totalTyped, charErrors });
 
-    // Check if paragraph complete
     if (newTyped.length >= paragraph.length) {
       onComplete({ typed: newTyped, charStates: newStates, charErrors });
     }
   }, [paragraph, isActive, isFinished, onProgress, onComplete]);
 
-  // Capture keystrokes from the window — no focused <input> means the OS
-  // never shows its text-suggestion bar (that's how Monkeytype/keybr work).
+  // ── Desktop keyboard listener ──
   useEffect(() => {
     if (!isActive || isFinished || !paragraph) return;
+    if (isMobile) return; // skip on mobile
 
     const handleKeyDown = (e) => {
-      // Ignore typing happening inside real form fields
       const tag = e.target?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-
-      // Tab / Escape are handled by the parent (Test.jsx)
       if (e.key === 'Tab' || e.key === 'Escape') return;
-
-      // Ignore shortcuts (Ctrl/Cmd/Alt combos)
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
       if (e.key === 'Backspace') {
@@ -91,7 +88,6 @@ const TypingArea = ({
         return;
       }
 
-      // Only printable single characters (letters, digits, punct, space)
       if (e.key.length === 1) {
         e.preventDefault();
         processInput(typedRef.current + e.key);
@@ -100,10 +96,22 @@ const TypingArea = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isActive, isFinished, paragraph, processInput, isMobile]);
+
+  // ── Mobile input handler ──
+  const handleMobileInput = useCallback((e) => {
+    if (!isActive || isFinished || !paragraph) return;
+    processInput(e.target.value);
   }, [isActive, isFinished, paragraph, processInput]);
 
-  // Auto-scroll so the cursor stays in view — only moves the scrollbar when
-  // the cursor would otherwise leave the visible area (Monkeytype-style).
+  // ── Auto focus hidden input on mobile when active ──
+  useEffect(() => {
+    if (isMobile && isActive && !isFinished && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isMobile, isActive, isFinished]);
+
+  // ── Auto scroll cursor into view ──
   useEffect(() => {
     const box = scrollRef.current;
     if (!box || !isActive || isFinished || !paragraph) return;
@@ -117,16 +125,13 @@ const TypingArea = ({
     const charEl = charRefs.current[cursorPos];
     if (!charEl) return;
 
-    const boxTop      = box.getBoundingClientRect().top;
-    const charTop     = charEl.getBoundingClientRect().top;
-    const boxHeight   = box.clientHeight;
+    const boxTop    = box.getBoundingClientRect().top;
+    const charTop   = charEl.getBoundingClientRect().top;
+    const boxHeight = box.clientHeight;
 
-    // Cursor scrolled above the visible area → bring it to ~35% from top
     if (charTop < boxTop) {
       box.scrollTop -= (boxTop - charTop) - boxHeight * 0.35;
-    }
-    // Cursor below the visible area → scroll down to reveal it
-    else if (charTop > boxTop + boxHeight - charEl.offsetHeight) {
+    } else if (charTop > boxTop + boxHeight - charEl.offsetHeight) {
       box.scrollTop += (charTop - (boxTop + boxHeight)) + charEl.offsetHeight + boxHeight * 0.35;
     }
   }, [cursorPos, isActive, isFinished, paragraph]);
@@ -137,11 +142,35 @@ const TypingArea = ({
 
   return (
     <div style={s.wrapper}>
+
+      {/* ── Hidden input for mobile keyboard ── */}
+      {isMobile && (
+        <input
+          ref={inputRef}
+          onChange={handleMobileInput}
+          style={s.hiddenInput}
+          disabled={!isActive || isFinished}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          aria-label="Typing input"
+        />
+      )}
+
       <div style={s.paragraphWrap}>
         <div ref={scrollRef} style={s.scrollBox}>
-          <div style={s.paragraph} id="paragraph-container">
+          <div
+            style={s.paragraph}
+            id="paragraph-container"
+            onClick={() => {
+              if (isMobile && inputRef.current) {
+                inputRef.current.focus();
+              }
+            }}
+          >
             {chars.map((char, i) => {
-              const state = charStates[i] || 'untyped';
+              const state    = charStates[i] || 'untyped';
               const isCursor = i === cursorPos;
 
               return (
@@ -150,15 +179,12 @@ const TypingArea = ({
                   ref={el => charRefs.current[i] = el}
                   style={{
                     ...s.char,
-                    color: state === 'correct' ? 'var(--text-primary)'
-                      : state === 'wrong' ? '#dc2626'
-                        : 'var(--char-untyped)',
-
-                    background: state === 'wrong' ? 'rgba(220,38,38,0.12)' : 'transparent',
-
-                    borderBottom: state === 'wrong' ? '2px solid #dc2626' : 'none',
-
-                    borderLeft: isCursor && isActive && !isFinished
+                    color       : state === 'correct' ? 'var(--text-primary)'
+                                : state === 'wrong'   ? '#dc2626'
+                                : 'var(--char-untyped)',
+                    background  : state === 'wrong'   ? 'rgba(220,38,38,0.12)' : 'transparent',
+                    borderBottom: state === 'wrong'   ? '2px solid #dc2626'    : 'none',
+                    borderLeft  : isCursor && isActive && !isFinished
                       ? '2px solid var(--accent)'
                       : 'none',
                   }}
@@ -175,13 +201,14 @@ const TypingArea = ({
           </div>
         </div>
 
-        {/* Press-any-key hint shown before the test starts */}
+        {/* Hint text */}
         {!isFinished && cursorPos === 0 && isActive && (
           <div style={s.focusHint}>
-            Press any key to start
+            {isMobile ? '👆 Tap here to start typing' : 'Press any key to start'}
           </div>
         )}
       </div>
+
     </div>
   );
 };
@@ -191,32 +218,45 @@ const s = {
     position: 'relative',
     width   : '100%',
   },
+  hiddenInput: {
+    position     : 'absolute',
+    opacity      : 0,
+    width        : '1px',
+    height       : '1px',
+    top          : 0,
+    left         : 0,
+    border       : 'none',
+    padding      : 0,
+    margin       : 0,
+    overflow     : 'hidden',
+    pointerEvents: 'none',
+  },
   paragraphWrap: {
-    position : 'relative',
-    cursor   : 'text',
+    position  : 'relative',
+    cursor    : 'text',
     userSelect: 'none',
   },
   scrollBox: {
-    maxHeight   : 'clamp(150px, 30vh, 280px)',
-    overflowY   : 'auto',
+    maxHeight         : 'clamp(150px, 30vh, 280px)',
+    overflowY         : 'auto',
     overscrollBehavior: 'contain',
-    scrollbarWidth: 'thin',
-    scrollbarColor: 'var(--border-color) transparent',
+    scrollbarWidth    : 'thin',
+    scrollbarColor    : 'var(--border-color) transparent',
   },
   paragraph: {
-    fontFamily: "'Courier New', Courier, monospace",
-    fontSize  : 'clamp(16px, 2.4vw, 20px)',
-    lineHeight: '1.9',
+    fontFamily   : "'Courier New', Courier, monospace",
+    fontSize     : 'clamp(16px, 2.4vw, 20px)',
+    lineHeight   : '1.9',
     letterSpacing: '0.03em',
-    color    : 'var(--text-muted)',
-    wordBreak: 'break-word',
-    minHeight: '120px',
+    color        : 'var(--text-muted)',
+    wordBreak    : 'break-word',
+    minHeight    : '120px',
   },
   char: {
-    display   : 'inline',
-    transition: 'color 0.1s',
+    display     : 'inline',
+    transition  : 'color 0.1s',
     borderRadius: '2px',
-    padding   : '0 1px',
+    padding     : '0 1px',
   },
   endCursor: {
     display   : 'inline',
